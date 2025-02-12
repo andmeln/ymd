@@ -26,7 +26,7 @@ def date_range(
         if (date >= stop and step > 0) or (date <= stop and step < 0):
             break
         yield date.strftime(format)
-        date = date + datetime.timedelta(days=step)
+        date += datetime.timedelta(days=step)
     return None
 
 
@@ -35,12 +35,13 @@ def date_list(
     stop: str | datetime.date | int,
     step: int = 1,
     format: str = "%Y-%m-%d",
+    timezone: str = None
 ) -> List[str]:
     """
     Return a list of date strings from start (inclusive) to stop (exclusive)
     by step. When step is given, it specifies the increment (or decrement).
     """
-    return list(date_range(start, stop, step, format))
+    return list(date_range(start, stop, step, format, timezone))
 
 
 def today(offset: int = 0, timezone: str = None, format: str = "%Y-%m-%d"):

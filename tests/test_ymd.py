@@ -45,3 +45,4 @@ def test_today():
     assert ymd.date_list(0, -2, -1) == [today, yesterday]
     assert ymd.date_list(0, 0) == []
     assert ymd.date_list(0, -1, -1) == [today]
+    today = ymd.today(timezone="America/Los_Angeles")
