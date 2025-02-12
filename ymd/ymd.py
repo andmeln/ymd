@@ -4,19 +4,23 @@ from typing import List, Iterator
 
 
 def date_range(
-    start: str | datetime.date | datetime.datetime,
+    start: str | datetime.date | datetime.datetime | int,
     stop: str | datetime.date | datetime.datetime | int,
     step: int = 1,
     format: str = "%Y-%m-%d",
+    timezone: str = None
 ) -> Iterator[str]:
     """
     Return an object that produces a sequence of date strings from
     start (inclusive) to stop (exclusive) by step. When step is given,
     it specifies the increment (or decrement) in days.
     """
-    date = datetime.date(*tuple(map(int, str(start)[:10].split("-"))))
+    if isinstance(start, int):
+        start = today(offset=start, timezone=timezone)
+    else:
+        date = datetime.date(*tuple(map(int, str(start)[:10].split("-"))))
     if isinstance(stop, int):
-        stop = date + datetime.timedelta(days=stop if step > 0 else -stop)
+        stop = date + datetime.timedelta(days=stop)
     else:
         stop = datetime.date(*tuple(map(int, str(stop)[:10].split("-"))))
     while True:
