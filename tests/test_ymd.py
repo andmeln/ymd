@@ -35,3 +35,13 @@ def test_date_list():
         "2025-01-09",
         "2025-01-08"
     ]
+
+
+def test_today():
+    today = ymd.today()
+    tomorrow = ymd.today(offset=1)
+    yesterday = ymd.today(offset=-1)
+    assert ymd.date_list(0, 2) == [today, tomorrow]
+    assert ymd.date_list(0, -2, -1) == [today, yesterday]
+    assert ymd.date_list(0, 0) == []
+    assert ymd.date_list(0, -1, -1) == [today]

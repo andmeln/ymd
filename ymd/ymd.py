@@ -17,8 +17,7 @@ def date_range(
     """
     if isinstance(start, int):
         start = today(offset=start, timezone=timezone)
-    else:
-        date = datetime.date(*tuple(map(int, str(start)[:10].split("-"))))
+    date = datetime.date(*tuple(map(int, str(start)[:10].split("-"))))
     if isinstance(stop, int):
         stop = date + datetime.timedelta(days=stop)
     else:
