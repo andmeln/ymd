@@ -3,6 +3,18 @@ import zoneinfo
 from typing import List, Iterator
 
 
+def parse_date(
+    date: str | datetime.date | datetime.datetime,
+    format: str = "%Y-%m-%d"
+) -> datetime.date:
+    if isinstance(date, str):
+        return datetime.datetime.strptime(date, format)
+    elif isinstance(date, (datetime.datetime, datetime.date)):
+        return date
+    else:
+        raise ValueError("Invalid date type")
+
+
 def date_range(
     start: str | datetime.date | datetime.datetime | int,
     stop: str | datetime.date | datetime.datetime | int,
@@ -17,11 +29,11 @@ def date_range(
     """
     if isinstance(start, int):
         start = today(offset=start, timezone=timezone)
-    date = datetime.date(*tuple(map(int, str(start)[:10].split("-"))))
+    date = parse_date(start, format=format)
     if isinstance(stop, int):
         stop = date + datetime.timedelta(days=stop)
     else:
-        stop = datetime.date(*tuple(map(int, str(stop)[:10].split("-"))))
+        stop = parse_date(stop, format=format)
     while True:
         if (date >= stop and step > 0) or (date <= stop and step < 0):
             break
@@ -44,7 +56,11 @@ def date_list(
     return list(date_range(start, stop, step, format, timezone))
 
 
-def today(offset: int = 0, timezone: str = None, format: str = "%Y-%m-%d"):
+def today(
+    offset: int = 0,
+    timezone: str = None,
+    format: str = "%Y-%m-%d"
+) -> str:
     """
     Return current date with an optional offset in days.
     """
@@ -55,3 +71,25 @@ def today(offset: int = 0, timezone: str = None, format: str = "%Y-%m-%d"):
     if offset:
         date = date + datetime.timedelta(days=offset)
     return date.strftime(format)
+
+
+def next_date(
+    date: str | datetime.date | datetime.datetime,
+    offset: int = 1,
+    format: str = "%Y-%m-%d"
+) -> str:
+    """
+    Returns the next date after the input date by a specified number of days.
+
+    Args:
+        date: The input date.
+        offset: The number of days to add to the input date. Defaults to 1.
+        format: The output format.
+
+    Returns:
+        str: The next date after the input date as a string in the specified
+        format.
+    """
+    date1 = parse_date(date, format=format)
+    date2 = date1 + datetime.timedelta(days=offset)
+    return date2.strftime(format)
